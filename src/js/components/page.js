@@ -2,7 +2,7 @@ export default (function(){
     
     function test() {
 
-        console.log("testing..!.");
+        console.log("testing..!.!");
     }
 
     function test2(){

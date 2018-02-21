@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node_modules/.bin/webpack",
+    "dev": "SET NODE_ENV=development&& webpack",
     "watch": "node_modules/.bin/webpack-dev-server",
-    "production": "node_modules/.bin/webpack -p",
+    "production": "SET NODE_ENV=production&& webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

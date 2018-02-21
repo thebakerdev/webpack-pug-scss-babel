@@ -7,7 +7,7 @@ let BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 let inProduction = (process.env.NODE_ENV === 'production');
 let cssDev = ['style-loader','css-loader','sass-loader'];
 let cssProd = ExtractTextPlugin.extract({ use:['css-loader','sass-loader'], fallback: 'style-loader'});
-let cssConfig = inProduction ? cssProd : cssDev;
+let cssConfig = (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') ? cssProd : cssDev;
 
 module.exports = {
 
@@ -99,7 +99,24 @@ module.exports = {
             jQuery: 'jquery',
             'window.jQuery': 'jquery',
             Tether: 'tether'
-        }),
+        })
+    ]
+};
+
+if(process.env.NODE_ENV === 'production') {
+
+    module.exports.plugins.push(
+        new webpack.optimize.UglifyJsPlugin(),
+        new ExtractTextPlugin('./css/style.css')
+    );
+} else if(process.env.NODE_ENV === 'development') {
+
+    module.exports.plugins.push(
+        new ExtractTextPlugin('./css/style.css')
+    );
+} else {
+
+    module.exports.plugins.push(
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new BrowserSyncPlugin({
@@ -124,13 +141,5 @@ module.exports = {
         },{
             reload:false
         })
-    ]
-};
-
-if(inProduction) {
-
-    module.exports.plugins.push(
-        new webpack.optimize.UglifyJsPlugin(),
-        new ExtractTextPlugin('./css/style.css')
     );
 }
