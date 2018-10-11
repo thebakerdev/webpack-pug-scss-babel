@@ -1,18 +1,61 @@
 /* COLORS */
 
-$brand-primary: "";
-$brand-primary-hover: "";
+$colors : (
+    red: red,
+    blue: blue,
+    yellow: yellow,
+    pink: pink,
+    grey: grey,
+    white: white
+);
 
-$background: "";
+/* BRAND VARIABLES */
 
-$font-color: "";
-$font-muted: "";
-$font-heading-color: "";
+$primary: map-get($colors,red);
+$primary-dark: darken($primary,15%);
+$primary-light: lighten($primary,15%);
+
+$secondary: map-get($colors,blue);
+$secondary-dark: darken($secondary,15%);
+$secondary-light: lighten($secondary,15%);
+
+$warning: map-get($colors,yellow);
+$warning-dark: darken($warning,15%);
+$warning-light: lighten($warning,15%);
+
+$info: map-get($colors,pink);
+$info-dark: darken($info,15%);
+$info-light: lighten($info,15%);
+
+$danger: map-get($colors,red);
+$danger-dark: darken($danger,15%);
+$danger-light: lighten($danger,15%);
+
+$disabled: map-get($colors,red);
+$disabled-dark: darken($disabled,15%);
+$disabled-light: lighten($disabled,15%);
+
+$font-color: map-get($colors,grey);
+$font-color-dark: darken($font-color,15%);
+$font-color-light: lighten($font-color,15%);
+$font-color-muted: '';
+
+$border-color: map-get($colors,grey);
+$border-color-dark: darken($border-color,15%);
+$border-color-light: lighten($border-color,15%);
+
 
 /* BREAK POINTS */
 
-$breakpoint-xs: 480px;
-$breakpoint-sm: 768px;
-$breakpoint-md: 992px;
-$breakpoint-lg: 1200px;
+$breakpoints: (
+    xs: 480px,
+    sm: 768px,
+    md: 992px,
+    lg: 1200px
+);
+
+$breakpoint-xs: map-get($breakpoints, xs);
+$breakpoint-sm: map-get($breakpoints, sm);
+$breakpoint-md: map-get($breakpoints, md);
+$breakpoint-lg: map-get($breakpoints, lg);
 
