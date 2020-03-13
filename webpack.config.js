@@ -1,23 +1,18 @@
-let webpack = require('webpack');
-let path = require('path');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
-let CleanWebpackPlugin = require('clean-webpack-plugin');
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-let inProduction = (process.env.NODE_ENV === 'production');
-let cssDev = ['style-loader','css-loader','sass-loader'];
-let cssProd = ExtractTextPlugin.extract({ use:['css-loader','sass-loader'], fallback: 'style-loader'});
-let cssConfig = (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') ? cssProd : cssDev;
+const webpack = require('webpack');
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserJSPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 module.exports = {
 
     entry: {
-        
         app: [
             './src/js/app.js',
             './src/scss/style.scss'
-        ]
-            
+        ]    
     },
     
     output: {
@@ -33,7 +28,13 @@ module.exports = {
         port: 9000,
         hot: true
     },
-
+    optimization: {
+        minimizer: [new TerserJSPlugin({}),new OptimizeCSSAssetsPlugin({})],
+    },
+    performance: {
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
     module: {
 
         rules: [
@@ -50,7 +51,12 @@ module.exports = {
 
             {
                 test: /\.scss$/,
-                use: cssConfig
+                use: [
+                    'style-loader',
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'sass-loader'
+                ]
             },
 
             {
@@ -81,40 +87,24 @@ module.exports = {
 
     plugins: [
 
-        // new CleanWebpackPlugin(['dist'],{
-        //     root: __dirname,
-        //     verbose: true,
-        //     dry: false
-        // }),
         new HtmlWebpackPlugin({
             title: 'Webpack Starter',
             template: './src/index.pug'
-        }),
-        new webpack.LoaderOptionsPlugin({
-
-            minimize: inProduction
         }),
         new webpack.ProvidePlugin({ // inject ES5 modules as global vars
             $: 'jquery',
             jQuery: 'jquery',
             'window.jQuery': 'jquery',
             Tether: 'tether'
-        })
+        }),
+        new MiniCssExtractPlugin({
+			filename: "./css/style.css",
+			chunkFilename: "[id].css"
+		})
     ]
 };
 
-if(process.env.NODE_ENV === 'production') {
-
-    module.exports.plugins.push(
-        new webpack.optimize.UglifyJsPlugin(),
-        new ExtractTextPlugin('./css/style.css')
-    );
-} else if(process.env.NODE_ENV === 'development') {
-
-    module.exports.plugins.push(
-        new ExtractTextPlugin('./css/style.css')
-    );
-} else {
+if(process.env.NODE_ENV !== 'production' || process.env.NODE_ENV !== 'development') {
 
     module.exports.plugins.push(
         new webpack.NamedModulesPlugin(),
@@ -142,4 +132,4 @@ if(process.env.NODE_ENV === 'production') {
             reload:false
         })
     );
-}
+} 
